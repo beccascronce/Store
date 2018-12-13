@@ -3,6 +3,8 @@ class ApplicationController < ActionController::Base
 
   before_action :categories, :brands
 
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
   def categories
   	@categories = Category.order(:name)
   end
@@ -11,5 +13,9 @@ class ApplicationController < ActionController::Base
   	@brands = Product.pluck(:brand).uniq.sort
   end
 
+def configure_permitted_parameters
+	devise_parameter_sanitizer.permit(:sign_up, keys: [:role])
 
+	devise_parameter_sanitizer.permit(:account_update, keys: [:role])
+end
 end
